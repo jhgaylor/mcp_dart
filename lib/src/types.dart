@@ -1801,10 +1801,13 @@ class Tool {
   /// Additional properties.
   final Map<String, dynamic> additionalProperties;
 
+  final List<String>? required;
+
   const Tool({
     required this.name,
     this.description,
     required this.inputSchema,
+    this.required,
     this.additionalProperties = const {},
   });
 
@@ -1812,13 +1815,15 @@ class Tool {
     final rest = Map<String, dynamic>.from(json)
       ..remove('name')
       ..remove('description')
-      ..remove('inputSchema');
+      ..remove('inputSchema')
+      ..remove('required');
     return Tool(
       name: json['name'] as String,
       description: json['description'] as String?,
       inputSchema: ToolInputSchema.fromJson(
         json['inputSchema'] as Map<String, dynamic>,
       ),
+      required: json['required'],
       additionalProperties: rest,
     );
   }
@@ -1827,6 +1832,7 @@ class Tool {
         'name': name,
         if (description != null) 'description': description,
         'inputSchema': inputSchema.toJson(),
+        if (required != null) 'required': required,
         ...additionalProperties,
       };
 }
